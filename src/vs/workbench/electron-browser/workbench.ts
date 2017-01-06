@@ -7,6 +7,7 @@
 
 import 'vs/css!./media/workbench';
 
+import { getWelcomeEditorInput } from 'vs/workbench/parts/walkThrough/electron-browser/walkThroughPart';
 import { TPromise, ValueCallback } from 'vs/base/common/winjs.base';
 import { IDisposable, dispose } from 'vs/base/common/lifecycle';
 import Event, { Emitter } from 'vs/base/common/event';
@@ -398,13 +399,23 @@ export class Workbench implements IPartService {
 		}
 
 		// Empty workbench: some first time users will not have an untiled file; returning users will always have one
-		else if (!this.contextService.hasWorkspace() && this.telemetryService.getExperiments().openUntitledFile) {
+		else if (!this.contextService.hasWorkspace()) {
 			return this.backupFileService.hasBackups().then(hasBackups => {
 				if (hasBackups) {
 					return TPromise.as([]); // do not open any empty untitled file if we have backups to restore
 				}
 
-				return TPromise.as([{ input: this.untitledEditorService.createOrGet() }]);
+				const inputs = [];
+				const experiments = this.telemetryService.getExperiments();
+				if (experiments.openUntitledFile) {
+					inputs.push({ input: this.untitledEditorService.createOrGet() });
+				}
+
+				if (experiments.openWelcomeWalkThrough) {
+					inputs.push({ input: getWelcomeEditorInput(this.instantiationService), options: EditorOptions.create({ pinned: true }) });
+				}
+
+				return TPromise.as(inputs);
 			});
 		}
 

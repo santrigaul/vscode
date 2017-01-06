@@ -27,6 +27,7 @@ export interface ITelemetryInfo {
 export interface ITelemetryExperiments {
 	showNewUserWatermark: boolean;
 	openUntitledFile: boolean;
+	openWelcomeWalkThrough: boolean;
 	openGettingStarted?: boolean;
 }
 
@@ -51,7 +52,8 @@ export interface ITelemetryService {
 
 export const defaultExperiments: ITelemetryExperiments = {
 	showNewUserWatermark: false,
-	openUntitledFile: true
+	openUntitledFile: false,
+	openWelcomeWalkThrough: true
 };
 
 export const NullTelemetryService = {
@@ -110,6 +112,7 @@ export function loadExperiments(contextService: IWorkspaceContextService, storag
 	return applyOverrides(configurationService, {
 		showNewUserWatermark,
 		openUntitledFile,
+		openWelcomeWalkThrough: defaultExperiments.openWelcomeWalkThrough,
 		openGettingStarted
 	});
 }
