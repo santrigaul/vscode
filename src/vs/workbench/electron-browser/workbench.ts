@@ -7,7 +7,7 @@
 
 import 'vs/css!./media/workbench';
 
-import { getWelcomeEditorInput } from 'vs/workbench/parts/walkThrough/electron-browser/walkThroughPart';
+// import { getWelcomeEditorInput } from 'vs/workbench/parts/walkThrough/electron-browser/walkThroughPart';
 import { TPromise, ValueCallback } from 'vs/base/common/winjs.base';
 import { IDisposable, dispose } from 'vs/base/common/lifecycle';
 import Event, { Emitter } from 'vs/base/common/event';
@@ -412,7 +412,7 @@ export class Workbench implements IPartService {
 				}
 
 				if (experiments.openWelcomeWalkThrough) {
-					inputs.push({ input: getWelcomeEditorInput(this.instantiationService), options: EditorOptions.create({ pinned: true }) });
+					// inputs.push({ input: getWelcomeEditorInput(this.instantiationService), options: EditorOptions.create({ pinned: true }) });
 				}
 
 				return TPromise.as(inputs);

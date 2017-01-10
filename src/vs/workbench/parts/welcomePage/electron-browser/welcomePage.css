@@ -1,0 +1,61 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.monaco-workbench > .part.editor > .content .monaco-workbench > .part.editor > .content .welcomePage {
+	font-family: "Lucida Grande", sans-serif;
+}
+
+.monaco-workbench > .part.editor > .content .welcomePage .splash {
+	position: absolute;
+	top: 50%;
+	left: 25%;
+	transform: translate(-50%, -50%);
+	width: 35%;
+}
+.monaco-workbench > .part.editor > .content .welcomePage .splash h1,
+.monaco-workbench > .part.editor > .content .welcomePage .splash h2 {
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	border: none;
+}
+.monaco-workbench > .part.editor > .content .welcomePage .splash .vscode-icon {
+	width: 1.5em;
+	height: 1.5em;
+	vertical-align: middle;
+}
+.monaco-workbench > .part.editor > .content .welcomePage .splash .title {
+	margin-bottom: 2em;
+}
+.monaco-workbench > .part.editor > .content .welcomePage .splash .showOnStartup {
+	margin-top: 2em;
+}
+
+.monaco-workbench > .part.editor > .content .welcomePage .commands {
+	position: absolute;
+	top: 50%;
+	left: 75%;
+	transform: translate(-50%, -50%);
+	width: 35%;
+}
+.monaco-workbench > .part.editor > .content .welcomePage .commands h3 {
+	text-align: center;
+}
+.monaco-workbench > .part.editor > .content .welcomePage .commands ul {
+	list-style: none;
+	padding: 0;
+}
+.monaco-workbench > .part.editor > .content .welcomePage .commands li {
+	background: #333;
+	margin: 15px 0px;
+	padding: 10px 20px;
+	border: 2px solid black;
+	border-radius: 10px;
+}
+.monaco-workbench > .part.editor > .content .welcomePage .commands a, a:hover, a:active {
+	color: #ccc;
+	text-decoration: none;
+	outline: none;
+}

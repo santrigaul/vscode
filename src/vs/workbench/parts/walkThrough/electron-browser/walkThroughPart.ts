@@ -6,9 +6,10 @@
 'use strict';
 
 import 'vs/css!./walkThroughPart';
-import nls = require('vs/nls');
+import * as nls from 'vs/nls';
 import { DomScrollableElement } from 'vs/base/browser/ui/scrollbar/scrollableElement';
 import { ScrollbarVisibility } from 'vs/base/common/scrollable';
+import * as strings from 'vs/base/common/strings';
 import URI from 'vs/base/common/uri';
 import { TPromise } from 'vs/base/common/winjs.base';
 import { DefaultConfig } from 'vs/editor/common/config/defaultConfig';
@@ -25,13 +26,16 @@ import { marked } from 'vs/base/common/marked/marked';
 import { IModeService } from 'vs/editor/common/services/modeService';
 import { IFileService } from 'vs/platform/files/common/files';
 import { IModelService } from 'vs/editor/common/services/modelService';
-import uuid = require('vs/base/common/uuid');
+import * as uuid from 'vs/base/common/uuid';
 import { CodeEditor } from 'vs/editor/browser/codeEditor';
 import { IInstantiationService } from 'vs/platform/instantiation/common/instantiation';
 import * as path from 'path';
 import { tmpdir } from 'os';
 import { mkdirp } from 'vs/base/node/extfs';
 import { IMode } from 'vs/editor/common/modes';
+import { IWorkbenchEditorService } from 'vs/workbench/services/editor/common/editorService';
+import { Position } from 'vs/platform/editor/common/editor';
+import { Action } from 'vs/base/common/actions';
 
 /**
  * An implementation of editor for showing HTML content.
@@ -117,6 +121,12 @@ export class WalkThroughPart extends BaseEditor {
 		return super.setInput(input, options)
 			.then(() => this.fileService.resolveContent(input.getResource(), { acceptTextOnly: true }))
 			.then(content => {
+				if (strings.endsWith(input.getResource().path, '.html')) {
+					this.content.innerHTML = content.value;
+					this.scrollbar.scanDomNode();
+					return;
+				}
+
 				const files: TPromise<any>[] = [];
 				const codes: { id: string; model: IModel }[] = [];
 				const renderer = new marked.Renderer();
@@ -148,7 +158,7 @@ export class WalkThroughPart extends BaseEditor {
 							theme: this.themeService.getColorTheme(),
 						};
 
-						const editor = this.instantiationService.createInstance(CodeEditor, div, options, null);
+						const editor = this.instantiationService.createInstance(CodeEditor, div, options);
 						editor.setModel(model);
 						this.contentDisposables.push(editor);
 
@@ -191,7 +201,28 @@ export class WalkThroughPart extends BaseEditor {
 	}
 }
 
+export class EditorWalkThroughAction extends Action {
+
+	public static ID = 'workbench.action.editorWalkThrough';
+	public static LABEL = nls.localize('editorWalkThrough', "Editor Walk-Through");
+
+	constructor(
+		id: string,
+		label: string,
+		@IWorkbenchEditorService private editorService: IWorkbenchEditorService,
+		@IInstantiationService private instantiationService: IInstantiationService
+	) {
+		super(id, label);
+	}
+
+	public run(): TPromise<void> {
+		const input = getWelcomeEditorInput(this.instantiationService);
+		return this.editorService.openEditor(input, { pinned: true }, Position.ONE)
+			.then(() => void (0));
+	}
+}
+
 export function getWelcomeEditorInput(instantiationService: IInstantiationService) {
 	const uri = URI.parse(require.toUrl('./media/welcome.md'));
-	return instantiationService.createInstance(WalkThroughInput, nls.localize('welcome.title', "Welcome"), '', uri);
+	return instantiationService.createInstance(WalkThroughInput, nls.localize('welcome.title', "Editor Walk-Through"), '', uri);
 }
